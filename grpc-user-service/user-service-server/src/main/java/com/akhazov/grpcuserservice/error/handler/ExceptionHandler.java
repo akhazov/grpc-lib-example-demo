@@ -1,4 +1,4 @@
-package com.akhazov.grpcuserservice.handler;
+package com.akhazov.grpcuserservice.error.handler;
 
 import build.buf.validate.Violation;
 import com.akhazov.grpc.clientservice.ApiError;
@@ -21,12 +21,12 @@ public class ExceptionHandler {
     @GrpcExceptionHandler
     public StatusRuntimeException serviceExceptionHandler(ServiceException exception) {
         Metadata.Key<ApiError> key = ProtoUtils.keyForProto(ApiError.getDefaultInstance());
-        ApiError response = ApiError.newBuilder()
+        ApiError value = ApiError.newBuilder()
                 .setErrorCode(exception.getError().getCode())
                 .addErrorMessage(exception.getMessage())
                 .build();
         Metadata metadata = new Metadata();
-        metadata.put(key, response);
+        metadata.put(key, value);
         log.warn(exception.getMessage());
         return exception.getError()
                 .getStatus()

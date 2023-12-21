@@ -11,8 +11,8 @@
     <description>API user service</description>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <io.grpc.lib.version>1.58.0</io.grpc.lib.version>
         <protobuf-java.version>3.24.0</protobuf-java.version>
         <proto-validate.version>0.1.8</proto-validate.version>

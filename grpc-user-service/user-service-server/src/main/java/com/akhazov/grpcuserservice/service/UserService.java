@@ -23,7 +23,6 @@ public class UserService {
 
     @Transactional
     public CreateUserGrpcResponse createUser(CreateUserGrpcRequest request) {
-        if (true) throw new RuntimeException("ЖОПА");
         UserEntity preparedEntity = userMapper.createUserRequestToEntity(request);
         preparedEntity.setUserStatus(UserStatus.NEW);
         UserEntity savedEntity = userRepository.save(preparedEntity);
