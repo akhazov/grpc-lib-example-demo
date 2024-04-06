@@ -19,9 +19,9 @@ public class MdcContextFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try(MDC.MDCCloseable mdcCloseable = MDC.putCloseable("RqUid", request.getHeader("RqUid"))) {
-            log.debug("REQUEST:%s %s &%s, body: \n%s".formatted(request.getMethod(), request.getRequestURI(), request.getQueryString(), new String(request.getInputStream().readAllBytes(), StandardCharsets.UTF_8)));
+            log.info("REQUEST:%s %s &%s, body: \n%s".formatted(request.getMethod(), request.getRequestURI(), request.getQueryString(), new String(request.getInputStream().readAllBytes(), StandardCharsets.UTF_8)));
             filterChain.doFilter(request, response);
-            log.debug("RESPONSE: status: %d".formatted(response.getStatus()));
+            log.info("RESPONSE: status: %d".formatted(response.getStatus()));
         }
     }
 

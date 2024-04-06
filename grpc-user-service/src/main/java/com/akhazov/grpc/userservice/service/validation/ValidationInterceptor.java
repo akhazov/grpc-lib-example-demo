@@ -20,11 +20,11 @@ public class ValidationInterceptor implements ServerInterceptor {
 
     @Override
     public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call, Metadata headers, ServerCallHandler<ReqT, RespT> next) {
-        log.info("Вызов метода: " + call.getMethodDescriptor().getFullMethodName());
         return new ForwardingServerCallListener.SimpleForwardingServerCallListener<>(next.startCall(call, headers)) {
             @SneakyThrows
             @Override
             public void onMessage(ReqT message) {
+                log.info("Вызов метода: " + call.getMethodDescriptor().getFullMethodName());
                 log.info("Входные параметры: " + message);
                 ValidationResult validate = requestValidator.validate((GeneratedMessageV3) message);
                 if(!validate.isSuccess()) throw new ServiceValidationException(Error.REQUEST_VALIDATION_ERROR, validate.getViolations());
