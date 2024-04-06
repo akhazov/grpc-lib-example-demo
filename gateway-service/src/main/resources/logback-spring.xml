@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration>
+
+<configuration>
+    <import class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"/>
+    <import class="ch.qos.logback.classic.encoder.JsonEncoder"/>
+    <import class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"/>
+    <import class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP"/>
+    <import class="ch.qos.logback.core.rolling.RollingFileAppender"/>
+    <import class="ch.qos.logback.core.ConsoleAppender"/>
+    <import class="ch.qos.logback.core.FileAppender"/>
+
+    <property name="LOGS" value="./logs" />
+
+    <appender name="Stdout" class="ConsoleAppender">
+        <encoder class="PatternLayoutEncoder">
+            <pattern>%white(%d{ISO8601}) %highlight(%-5level) [%mdc] [%blue(%t)] %yellow(%C{1}): %msg%n%throwable</pattern>
+            <outputPatternAsHeader>true</outputPatternAsHeader>
+        </encoder>
+    </appender>
+
+    <appender name="File" class="FileAppender">
+        <file>foo.json</file>
+        <encoder class="JsonEncoder">
+            <withFormattedMessage>true</withFormattedMessage>
+            <withMessage>false</withMessage>
+            <withArguments>false</withArguments>
+        </encoder>
+    </appender>
+
+    <appender name="RollingFile" class="RollingFileAppender">
+        <file>${LOGS}/application.log</file>
+        <encoder class="JsonEncoder">
+            <withFormattedMessage>true</withFormattedMessage>
+            <withMessage>true</withMessage>
+            <withArguments>true</withArguments>
+        </encoder>
+
+        <rollingPolicy class="TimeBasedRollingPolicy">
+            <!-- rollover daily and when the file reaches 10 MegaBytes -->
+            <fileNamePattern>${LOGS}/archived/logger-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <root>
+        <level value="INFO"/>
+        <appender-ref ref="Stdout"/>
+        <appender-ref ref="RollingFile"/>
+    </root>
+</configuration>
