@@ -1,0 +1,17 @@
+grpc:
+  server:
+    port: 6567
+  client:
+    cache-user-service.address: static://localhost:6565
+    cache-user-service.negotiation-type: plaintext
+
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:file:./.h2/db/clients;AUTO_SERVER=true
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
