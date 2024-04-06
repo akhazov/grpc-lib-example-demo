@@ -1,0 +1,21 @@
+server:
+  port: 8081
+
+grpc:
+  port: 6565
+  clients:
+    configuration:
+      grpc-user-service:
+        address: localhost
+        port: 6567
+
+management:
+  endpoints.web.exposure.include: 'prometheus, health'
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+#    distribution:
+#      percentiles-histogram:
+#        "[http.server.requests]": true
+

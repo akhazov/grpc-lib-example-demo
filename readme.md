@@ -4,11 +4,13 @@
 
 ### Структура проекта
 * gateway-service (in_process): Модуль для сервиса шлюза.
-* grpc-user-cache-server (in_process): Модуль, содержащий gRPC-сервер для кеширования пользователей.
-* grpc-user-service: Родительский модуль для gRPC-сервиса пользователей.
-  * user-service-api: Модуль, определяющий API gRPC-сервиса пользователей.
-  * user-service-server: Модуль, реализующий сервер gRPC-сервиса пользователей.
-      * Используемые технологии:
-        * Java 21
-        * Spring Boot: 3.2.0
-        * GRPC библиотека: net.devh:grpc-server-spring-boot-starter:2.15.0.RELEASE
+* grpc-user-cache-server: gRPC-сервис для кеширования данных пользователей.
+  * Используемые технологии:
+    * Java 21
+    * Spring Boot: 3.2.3
+    * GRPC библиотека: io.github.lognet:grpc-spring-boot-starter:5.1.5
+* grpc-user-service: gRPC-сервис пользователей.
+  * Используемые технологии:
+    * Java 21
+    * Spring Boot: 3.2.3
+    * GRPC библиотека: net.devh:grpc-server-spring-boot-starter:3.0.0.RELEASE
