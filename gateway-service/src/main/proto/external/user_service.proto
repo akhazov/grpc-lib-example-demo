@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package com.akhazov.grpc.clientservice;
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = true;
+
+service UserService {
+
+  rpc createUser(CreateUserGrpcRequest) returns (CreateUserGrpcResponse) {}
+
+  rpc updateUser(UpdateUserGrpcRequest) returns (UpdateUserGrpcResponse) {}
+
+  rpc getUserById(GetUserByIdGrpcRequest) returns (GetUserByIdGrpcResponse) {}
+
+  //TODO Реализовать сортировку и пагинацию.
+  rpc getUsers(google.protobuf.Empty) returns (GetUsersGrpcResponse) {}
+
+  rpc deleteUserById(DeleteUserByIdGrpcRequest) returns (google.protobuf.Empty) {}
+
+}
+
+message ApiError {
+  string errorCode = 1;
+  repeated string errorMessage = 2;
+}
+
+enum USER_STATUS {
+  NEW = 0;
+  ACTIVE = 1;
+  BLOCKED = 2;
+}
+
+message CreateUserGrpcRequest {
+  string firstName = 1;
+  string lastName = 2;
+}
+
+message CreateUserGrpcResponse {
+  int32 userId = 1;
+}
+
+message GetUserByIdGrpcRequest {
+  int32 userId = 1;
+}
+
+message GetUserByIdGrpcResponse {
+  int32 userId = 1;
+  string firstName = 2;
+  string lastName = 3;
+  USER_STATUS userStatus = 4;
+  google.protobuf.Timestamp creationDate = 5;
+}
+
+message UpdateUserGrpcRequest {
+  int32 userId = 1;
+  string firstName = 2;
+  string lastName = 3;
+}
+
+message UpdateUserGrpcResponse {
+  int32 userId = 1;
+  string firstName = 2;
+  string lastName = 3;
+}
+
+message GetUsersGrpcResponse {
+  repeated User users = 1;
+
+  message User {
+    int32 userId = 1;
+    string firstName = 2;
+    string lastName = 3;
+    USER_STATUS userStatus = 4;
+    string creationDate = 5;
+  }
+}
+
+message DeleteUserByIdGrpcRequest {
+  int32 userId = 1;
+}
+

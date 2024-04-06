@@ -1,0 +1,7 @@
+grpc:
+  client:
+    cache-user-service.address: static://localhost:6565
+    cache-user-service.negotiation-type: plaintext
+
+    grpc-user-service.address: static://localhost:6567
+    grpc-user-service.negotiation-type: plaintext
