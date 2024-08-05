@@ -16,5 +16,9 @@
 * grpc-user-service: gRPC-сервис пользователей.
   * Используемые технологии:
     * Java 21
-    * Spring Boot: 3.2.3
-    * GRPC библиотека: net.devh:grpc-server-spring-boot-starter:3.0.0.RELEASE
+    * Spring Boot: 3.3.2
+    * GRPC библиотека: net.devh:grpc-server-spring-boot-starter:3.1.0.RELEASE
+  * Функциональные примеры:
+    * Перехватчики запросов для [сервера и клиента](grpc-user-service/src/main/java/com/akhazov/grpc/userservice/config/interceptor). В примерах показан проброс rqUid запроса в логи.
+    * Реализация централизованной [обработки исключений](grpc-user-service/src/main/java/com/akhazov/grpc/userservice/error).
+    * Валидация входящих gRPC запросов с помощью библиотеки [protovalidate](grpc-user-service/src/main/java/com/akhazov/grpc/userservice/service/validation/GrpcRequestValidationService.java).
