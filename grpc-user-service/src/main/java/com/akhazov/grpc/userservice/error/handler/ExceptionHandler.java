@@ -1,7 +1,7 @@
 package com.akhazov.grpc.userservice.error.handler;
 
 import build.buf.validate.Violation;
-import com.akhazov.grpc.clientservice.ApiError;
+import com.akhazov.grpc.common.ErrorDetail;
 import com.akhazov.grpc.userservice.error.ServiceException;
 import com.akhazov.grpc.userservice.error.ServiceValidationException;
 import io.grpc.Metadata;
@@ -12,18 +12,26 @@ import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.advice.GrpcAdvice;
 import net.devh.boot.grpc.server.advice.GrpcExceptionHandler;
 
-import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+/**
+ * Обработчик ошибок, возникающих при grpc запросах сервиса.
+ * Подробности об ошибке передаются в метаданных.
+ */
 @Slf4j
 @GrpcAdvice
 public class ExceptionHandler {
 
+    /**
+     * Обработка бизнес ошибок.
+     */
     @GrpcExceptionHandler
     public StatusRuntimeException serviceExceptionHandler(ServiceException exception) {
-        Metadata.Key<ApiError> key = ProtoUtils.keyForProto(ApiError.getDefaultInstance());
-        ApiError value = ApiError.newBuilder()
+        Metadata.Key<ErrorDetail> key = ProtoUtils.keyForProto(ErrorDetail.getDefaultInstance());
+        ErrorDetail value = ErrorDetail.newBuilder()
                 .setErrorCode(exception.getError().getCode())
-                .addErrorMessage(exception.getMessage())
+                .setMessage(exception.getMessage())
                 .build();
         Metadata metadata = new Metadata();
         metadata.put(key, value);
@@ -35,19 +43,21 @@ public class ExceptionHandler {
                 .asRuntimeException(metadata);
     }
 
+    /**
+     * Обработка ошибок валидации запросов.
+     */
     @GrpcExceptionHandler
     public StatusRuntimeException validationExceptionHandler(ServiceValidationException exception) {
-        Metadata.Key<ApiError> key = ProtoUtils.keyForProto(ApiError.getDefaultInstance());
-        List<String> messages = exception.getViolations().stream()
-                .map(Violation::getMessage)
-                .toList();
-        ApiError response = ApiError.newBuilder()
+        Metadata.Key<ErrorDetail> key = ProtoUtils.keyForProto(ErrorDetail.getDefaultInstance());
+        Map<String, String> messages = exception.getViolations().stream()
+                .collect(Collectors.toMap(Violation::getConstraintId, Violation::getMessage));
+        ErrorDetail response = ErrorDetail.newBuilder()
                 .setErrorCode(exception.getError().getCode())
-                .addAllErrorMessage(messages)
+                .setMessage(exception.getError().getDescription())
+                .putAllMetadata(messages)
                 .build();
         Metadata metadata = new Metadata();
         metadata.put(key, response);
-        log.warn("Не валидные входные параметры: " + messages);
         return exception.getError()
                 .getStatus()
                 .withCause(exception)
@@ -55,6 +65,9 @@ public class ExceptionHandler {
                 .asRuntimeException(metadata);
     }
 
+    /**
+     * Обработка общих случаев возникновения исключений.
+     */
     @GrpcExceptionHandler
     public StatusRuntimeException exceptionHandler(Exception exception) {
         Metadata metadata = Status.trailersFromThrowable(exception);

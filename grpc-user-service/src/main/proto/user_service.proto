@@ -24,11 +24,6 @@ service UserService {
 
 }
 
-message ApiError {
-  string errorCode = 1;
-  repeated string errorMessage = 2;
-}
-
 enum USER_STATUS {
   NEW = 0;
   ACTIVE = 1;
